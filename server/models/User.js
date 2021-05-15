@@ -31,11 +31,9 @@ const userSchema = mongoose.Schema({
     type: String,
   },
 });
-
-//get user, but before save, pre-save, generate password, grab it and hash it.
-//do something before save, then run callback function with next method
+//do something before save, then run callback function with next method //get user, but before save, pre-save, generate password, grab it and hash it.
 userSchema.pre('save', function (next) {
-  var user = this; //this = user we are trying to save
+  const user = this; //this = user we are trying to save
   //if existing user trying to updating password, then hash password
   if (user.isModified('password')) {
     //call genSalt method to generate hash, then run callback function. if no error, then get salt value.
@@ -54,11 +52,22 @@ userSchema.pre('save', function (next) {
   }
 });
 
+//compare user password string vs hashed password
+userSchema.methods.comparePassword = function (candidatePassword) {
+  const user = this;
+  //dehash and compare password with bcrypt:
+  return bcrypt
+    .compare(candidatePassword, user.password)
+    .then(function (result) {
+      return result;
+    });
+};
+
 //use userSchema.methods to create method to generate token
 userSchema.methods.generateToken = async function () {
-  var user = this; //store user for later use
+  const user = this; //store user for later use
   // sign method to create tokens with 3 arguments: what we want to create a token for (email), secret PW to generate token, expiration date
-  var token = jwt.sign({ email: user.email }, process.env.SECRET, {
+  const token = jwt.sign({ email: user.email }, process.env.SECRET, {
     expiresIn: '7d',
   });
 

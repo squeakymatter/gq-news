@@ -1,4 +1,4 @@
-//bring in user from User model from mongooose
+//bring in user from User model from mongoose
 const { User } = require('../../models/User');
 const {
   UserInputError,
@@ -9,7 +9,35 @@ const {
 module.exports = {
   Mutation: {
     authUser: async (parent, args, context, info) => {
-      return true;
+      try {
+        //check that email address is correct
+        const user = await User.findOne({
+          email: args.fields.email,
+        });
+        //throw authentication error if email not recognized
+        if (!user) {
+          throw new AuthenticationError(
+            'Your email address is not recognized.'
+          );
+        }
+        //check if password is correct
+        const checkPassword = await user.comparePassword(args.fields.password);
+        //throw error if password is incorrect
+        if (!checkPassword) {
+          throw new AuthenticationError('Your email or password is incorrect.');
+        }
+        //login successful - generate token
+        const getToken = await user.generateToken();
+
+        //return user with new token
+        return {
+          _id: user.id,
+          email: user.email,
+          token: getToken.token,
+        };
+      } catch (err) {
+        throw err;
+      }
     },
     signUp: async (parent, args, context, info) => {
       try {
