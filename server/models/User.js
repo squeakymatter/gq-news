@@ -67,9 +67,13 @@ userSchema.methods.comparePassword = function (candidatePassword) {
 userSchema.methods.generateToken = async function () {
   const user = this; //store user for later use
   // sign method to create tokens with 3 arguments: what we want to create a token for (email), secret PW to generate token, expiration date
-  const token = jwt.sign({ email: user.email }, process.env.SECRET, {
-    expiresIn: '7d',
-  });
+  const token = jwt.sign(
+    { _id: user._id, email: user.email },
+    process.env.SECRET,
+    {
+      expiresIn: '7d',
+    }
+  );
 
   //pass token to user:
   user.token = token;
