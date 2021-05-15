@@ -1,5 +1,10 @@
 //bring in user from User model from mongooose
 const { User } = require('../../models/User');
+const {
+  UserInputError,
+  AuthenticationError,
+  ApolloError,
+} = require('apollo-server-express');
 
 module.exports = {
   Mutation: {
@@ -16,15 +21,23 @@ module.exports = {
 
         const getToken = await user.generateToken();
         if (!getToken) {
-          throw new AuthenticationError('Something went wrong, try again');
+          throw new AuthenticationError(
+            'Something went wrong. Please try again.'
+          );
         }
         return { ...getToken._doc };
       } catch (err) {
+        // E11000 is the default MongoDB error for duplicate user
         if (err.code === 11000) {
-          throw new AuthenticationError('Sorry, duplicated email.');
+          throw new AuthenticationError(
+            'This email address is already in use.'
+          );
         }
         throw err;
       }
     },
   },
 };
+
+//validate user has correct token
+//adding posts - make sure user has correct token
