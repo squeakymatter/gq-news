@@ -1,18 +1,18 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 //graphql
 const typeDefs = require('./graphql/schema');
 const { Query } = require('./graphql/resolvers/query');
+const { Mutation } = require('./graphql/resolvers/mutation');
 
 const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers: {
     Query,
-    //mutations
+    Mutation,
     //user,etc.
   },
 });
