@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const typeDefs = require('./graphql/schema');
 const { Query } = require('./graphql/resolvers/query');
 const { Mutation } = require('./graphql/resolvers/mutation');
+const { User } = require('./graphql/resolvers/user');
+const { Post } = require('./graphql/resolvers/post');
 
 const app = express();
 const server = new ApolloServer({
@@ -13,10 +15,12 @@ const server = new ApolloServer({
   resolvers: {
     Query,
     Mutation,
+    User,
+    Post,
   },
   context: ({ req }) => {
     req.headers.authorization =
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDlmNDUwYTI3MTIxODBiYTNkM2UyYjciLCJlbWFpbCI6ImZvb2JhcnJpb0Bmb29iYXIuY29tIiwiaWF0IjoxNjIxMTQ2OTEzLCJleHAiOjE2MjE3NTE3MTN9.qa81NvP1QTFBqbT4tkahczMa87QM2N4F6NW8oFBb7L0';
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDlmNDUwYTI3MTIxODBiYTNkM2UyYjciLCJlbWFpbCI6ImZvb2JhcnJpb0Bmb29iYXIuY29tIiwiaWF0IjoxNjIxMTQ5MzA2LCJleHAiOjE2MjE3NTQxMDZ9.5MS3f-cIoTxKndYnIJcy_meSr_g6B6qmWFPSf37ZDcs';
 
     return { req };
   },

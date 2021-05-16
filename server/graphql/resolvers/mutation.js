@@ -1,6 +1,7 @@
 //bring in user from User model from mongoose
 const { User } = require('../../models/User');
 const { Post } = require('../../models/Post');
+const { Category } = require('../../models/Category');
 const {
   UserInputError,
   AuthenticationError,
@@ -137,8 +138,24 @@ module.exports = {
           content: fields.content,
           author: req._id,
           status: fields.status,
+          category: fields.category,
         });
         const result = await post.save();
+        return { ...result._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
+    createCategory: async (parent, args, context, info) => {
+      try {
+        //verify user is authorized
+        const req = authorize(context.req);
+        //todo: validation
+        const category = new Category({
+          author: req._id,
+          name: args.name,
+        });
+        const result = await category.save();
         return { ...result._doc };
       } catch (err) {
         throw err;

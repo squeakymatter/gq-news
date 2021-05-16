@@ -28,6 +28,11 @@ const postSchema = mongoose.Schema(
       enum: ['DRAFT', 'PUBLIC'],
       default: 'DRAFT',
     },
+    category: {
+      type: Schema.Types.ObjectId,
+      reference: 'Category',
+      require: true,
+    },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
