@@ -1,10 +1,13 @@
 //bring in user from User model from mongoose
 const { User } = require('../../models/User');
+const { Post } = require('../../models/Post');
 const {
   UserInputError,
   AuthenticationError,
   ApolloError,
 } = require('apollo-server-express');
+const authorize = require('../../utils/isAuth');
+const { userOwnership } = require('../../utils/tools');
 
 module.exports = {
   Mutation: {
@@ -64,8 +67,82 @@ module.exports = {
         throw err;
       }
     },
+    updateUserProfile: async (parent, args, context, info) => {
+      try {
+        //check if user is authorized/has good token
+        const req = authorize(context.req);
+        //if token is correct, make sure user owns what they're trying to modify
+        //get id that user is trying to modify through he args, and the id from the token and if user is incorrect, throw error.
+        if (!userOwnership(req, args._id))
+          throw new AuthenticationError('Incorrect user');
+        // to do: validate fields
+
+        const user = await User.findOneAndUpdate(
+          { _id: args._id },
+          {
+            $set: {
+              firstName: args.firstName,
+              lastName: args.lastName,
+            },
+          },
+          { new: true }
+        );
+        return { ...user._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
+    updateUserEmailPassword: async (parent, args, context, info) => {
+      try {
+        const req = authorize(context.req);
+
+        if (!userOwnership(req, args._id))
+          throw new AuthenticationError(
+            'You are not authorized to perform this action.'
+          );
+
+        const user = await User.findOne({ _id: req._id });
+        if (!user)
+          throw new AuthenticationError(
+            'You are not authorized to perform this action.'
+          );
+
+        // TODO: validate fields
+
+        if (args.email) {
+          user.email = args.email;
+        }
+        if (args.password) {
+          user.password = args.password;
+        }
+
+        /// If correct user, generate token
+        const getToken = await user.generateToken();
+        if (!getToken) {
+          throw new AuthenticationError('Something went wrong, try again');
+        }
+        return { ...getToken._doc, token: getToken.token };
+      } catch (err) {
+        throw new ApolloError('Something went wrong, try again', err);
+      }
+    },
+    createPost: async (parent, { fields }, context, info) => {
+      try {
+        //verify user is authorized
+        const req = authorize(context.req);
+        //todo: validation
+        const post = new Post({
+          title: fields.title,
+          excerpt: fields.excerpt,
+          content: fields.content,
+          author: req._id,
+          status: fields.status,
+        });
+        const result = await post.save();
+        return { ...result._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
   },
 };
-
-//validate user has correct token
-//adding posts - make sure user has correct token

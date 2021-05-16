@@ -1,5 +1,5 @@
 const { User } = require('../../models/User');
-const authorize = require('../../../utils/isAuth');
+const authorize = require('../../utils/isAuth');
 const { AuthenticationError } = require('apollo-server-express');
 module.exports = {
   Query: {
