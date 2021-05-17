@@ -1,6 +1,8 @@
 const { User } = require('../../models/User');
 const { Category } = require('../../models/Category');
+const { Post } = require('../../models/Post');
 const authorize = require('../../utils/isAuth');
+const { sortArgsHelper } = require('../../utils/tools');
 const { AuthenticationError } = require('apollo-server-express');
 
 module.exports = {
@@ -45,6 +47,32 @@ module.exports = {
 
         const categories = await Category.find(catQuery);
         return categories;
+      } catch (err) {
+        throw err;
+      }
+    },
+    post: async (parent, args, context, info) => {
+      try {
+        const post = await Post.findOne({ _id: args.id });
+        return post;
+      } catch (err) {
+        throw err;
+      }
+    },
+    posts: async (parent, { sort, queryBy }, context, info) => {
+      try {
+        let queryByArgs = {};
+        let sortArgs = sortArgsHelper(sort);
+
+        if (queryBy) {
+          queryByArgs[queryBy.key] = queryBy.value;
+        }
+        const posts = await Post.find(queryByArgs)
+          .sort([[sortArgs.sortBy, sortArgs.order]])
+          .skip(sortArgs.skip)
+          .limit(sortArgs.limit);
+
+        return posts;
       } catch (err) {
         throw err;
       }
