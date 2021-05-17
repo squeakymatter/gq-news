@@ -28,6 +28,7 @@ const typeDefs = gql`
     status: PostStatus
     author: User!
     category: Category!
+    related(sort: SortInput): [Post!]
   }
 
   type User {
@@ -37,7 +38,7 @@ const typeDefs = gql`
     firstName: String
     lastName: String
     token: String
-    posts: [Post!]!
+    posts(sort: SortInput): [Post!]!
     categories: [Category!]!
   }
 
