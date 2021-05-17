@@ -9,6 +9,7 @@ const {
 } = require('apollo-server-express');
 const authorize = require('../../utils/isAuth');
 const { userOwnership } = require('../../utils/tools');
+const post = require('./post');
 
 module.exports = {
   Mutation: {
@@ -156,6 +157,29 @@ module.exports = {
           name: args.name,
         });
         const result = await category.save();
+        return { ...result._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
+    updatePost: async (parent, { fields, postId }, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const post = await Post.findOne({ _id: postId });
+        /// To Do: if post not found, throw error.
+
+        if (!userOwnership(req, post.author))
+          throw new AuthenticationError(
+            'You are not authorized to perform this action'
+          );
+
+        for (key in fields) {
+          if (post[key] != fields[key]) {
+            post[key] = fields[key];
+          }
+        }
+
+        const result = await post.save();
         return { ...result._doc };
       } catch (err) {
         throw err;
