@@ -166,7 +166,10 @@ module.exports = {
       try {
         const req = authorize(context.req);
         const post = await Post.findOne({ _id: postId });
-        /// To Do: if post not found, throw error.
+
+        if (!post) {
+          throw new UserInputError('Post does not exist!');
+        }
 
         if (!userOwnership(req, post.author))
           throw new AuthenticationError(
@@ -183,6 +186,24 @@ module.exports = {
         return { ...result._doc };
       } catch (err) {
         throw err;
+      }
+    },
+    deletePost: async (parent, { postId }, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const post = await Post.findOne({ _id: postId });
+        if (!post) {
+          throw new UserInputError('This post does not exist.');
+        }
+        if (!userOwnership(req, post.author)) {
+          throw new AuthenticationError(
+            'You are not authorized to perform this action.'
+          );
+        }
+        const result = await post.remove();
+        return result;
+      } catch (error) {
+        throw error;
       }
     },
   },
