@@ -4,6 +4,7 @@ const typeDefs = gql`
   type Query {
     user(id: ID!): User!
     isAuth: User!
+    categories(catId: ID): [Category]!
   }
 
   type Mutation {
@@ -27,13 +28,6 @@ const typeDefs = gql`
     category: Category!
   }
 
-  type Category {
-    _id: ID!
-    name: String!
-    author: User!
-    posts: [Post]
-  }
-
   type User {
     _id: ID!
     email: String!
@@ -43,6 +37,13 @@ const typeDefs = gql`
     token: String
     posts: [Post!]!
     categories: [Category!]!
+  }
+
+  type Category {
+    _id: ID!
+    name: String!
+    author: User!
+    posts: [Post]
   }
 
   input AuthInput {

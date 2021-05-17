@@ -8,6 +8,7 @@ const { Query } = require('./graphql/resolvers/query');
 const { Mutation } = require('./graphql/resolvers/mutation');
 const { User } = require('./graphql/resolvers/user');
 const { Post } = require('./graphql/resolvers/post');
+const { Category } = require('./graphql/resolvers/category');
 
 const app = express();
 const server = new ApolloServer({
@@ -17,6 +18,7 @@ const server = new ApolloServer({
     Mutation,
     User,
     Post,
+    Category,
   },
   context: ({ req }) => {
     req.headers.authorization =
