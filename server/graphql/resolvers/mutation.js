@@ -10,6 +10,7 @@ const {
 const authorize = require('../../utils/isAuth');
 const { userOwnership } = require('../../utils/tools');
 const post = require('./post');
+const category = require('./category');
 
 module.exports = {
   Mutation: {
@@ -204,6 +205,35 @@ module.exports = {
         return result;
       } catch (error) {
         throw error;
+      }
+    },
+    updateCategory: async (parent, { catId, name }, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const category = await Category.findOneAndUpdate(
+          { _id: catId },
+          {
+            $set: {
+              name,
+            },
+          },
+          { new: true }
+        );
+        /// throw..
+        return { ...category._doc };
+      } catch (err) {
+        throw err;
+      }
+    },
+    deleteCategory: async (parent, { catId }, context, info) => {
+      try {
+        const req = authorize(context.req);
+        const category = await Category.findByIdAndRemove(catId);
+        if (!category) throw new UserInputError('Category does not exist.');
+
+        return category;
+      } catch (err) {
+        throw err;
       }
     },
   },
