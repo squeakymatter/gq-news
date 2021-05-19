@@ -67,7 +67,11 @@ module.exports = {
             'This email address is already in use.'
           );
         }
-        throw err;
+        throw new ApolloError(
+          'Something went wrong. Please try again.',
+          null,
+          err
+        );
       }
     },
     updateUserProfile: async (parent, args, context, info) => {
