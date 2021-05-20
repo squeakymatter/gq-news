@@ -1,7 +1,12 @@
 import React from 'react';
+import UserHome from '../Hoc/UserHome';
 
 const User = () => {
-  return <>user</>;
+  return (
+    <UserHome>
+      <div>Welcome...</div>
+    </UserHome>
+  );
 };
 
 export default User;
