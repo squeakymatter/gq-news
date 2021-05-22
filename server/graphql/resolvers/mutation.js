@@ -99,7 +99,7 @@ module.exports = {
         throw err;
       }
     },
-    updateUserEmailPassword: async (parent, args, context, info) => {
+    updateUserEmailPasswordword: async (parent, args, context, info) => {
       try {
         const req = authorize(context.req);
 
