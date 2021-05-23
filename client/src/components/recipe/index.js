@@ -16,7 +16,7 @@ const Recipe = (props) => {
         }
       });
     }
-  }, [dispatch]);
+  }, [dispatch, props.match.params.id, props.history]);
 
   const myPost =
     posts.singlePost && posts.singlePost.post ? posts.singlePost.post : null;

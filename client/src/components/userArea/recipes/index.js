@@ -23,7 +23,7 @@ const Recipes = (props) => {
 
   useEffect(() => {
     dispatch(getUserPosts(sort, [], user.auth._id));
-  }, []);
+  }, [dispatch, sort, user.auth._id]);
 
   return (
     <UserAreaHOC>

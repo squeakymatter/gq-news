@@ -3,16 +3,16 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <link rel="icon" type="image/png" href="./images/maskable_icon_x192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <meta name="description" content="Recipe PWA React App" />
+  <link rel="apple-touch-icon" href="./images/maskable_icon_x192.png" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="manifest" href="./manifest.json" />
   <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -31,11 +31,11 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('serviceWorker.js').then(function (registration) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('serviceWorker.js').then((registration) => {
           // Registration was successful
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function (err) {
+        }, (err) => {
           // registration failed :(
           console.log('ServiceWorker registration failed: ', err);
         });
