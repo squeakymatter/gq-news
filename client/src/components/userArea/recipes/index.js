@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import UserAreaHOC from '../../hoc/userAreaHoc';
+import UserAreaHOC from '../../Hoc/userAreaHoc';
 import { Table, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {

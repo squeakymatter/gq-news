@@ -3,11 +3,11 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 
-import AutoSignIn from './components/hoc/autoSignin';
-import Auth from './components/hoc/auth';
+import AutoSignIn from './components/Hoc/AutoSignIn';
+import Auth from './components/Hoc/Auth';
 
-import Home from './components/home';
-import Header from './components/header';
+import Home from './components/Home';
+import Header from './components/Header';
 import UserAccess from './components/userArea/access';
 import UserArea from './components/userArea';
 import Profile from './components/userArea/profile';
