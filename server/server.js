@@ -28,7 +28,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.MONGODB_URI || 5000;
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@cluster0.lkxwy.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
