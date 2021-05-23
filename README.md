@@ -1,1 +1,1 @@
-# gq-news
+# gq-recipes

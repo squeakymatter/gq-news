@@ -6,21 +6,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import './css/style.css';
 
 import { Provider } from 'react-redux';
-import {} from 'redux';
 import { createStore, applyMiddleware } from 'redux';
 import promiseMiddleware from 'redux-promise';
-import Reducers from './store/reducers/index';
 
-const createStoreWithMiddleware =
-  applyMiddleware(promiseMiddleware)(createStore);
+import Reducers from './store/reducers/index';
+const createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider
       store={createStoreWithMiddleware(
         Reducers,
-        window.__REDUX_DEVTOOLS_EXTENSION__ &&
-          window.__REDUX_DEVTOOLS_EXTENSION__()
+        window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__()
       )}
     >
       <Routes />
@@ -28,3 +25,4 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+

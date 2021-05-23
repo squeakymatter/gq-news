@@ -1,0 +1,10 @@
+{
+  "version": "2",
+  "pinnedList": [
+    "/Users/squeak/gq-recipes/client/src/components/User/UserProfile/userStats.js",
+    "/Users/squeak/gq-recipes/client/src/store/actions",
+    "/Users/squeak/gq-recipes/client/src/store/reducers",
+    "/Users/squeak/gq-recipes/client/src/api"
+  ],
+  "aliasMap": {}
+}
