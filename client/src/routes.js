@@ -13,7 +13,7 @@ import UserArea from './components/userArea';
 import Profile from './components/userArea/profile';
 import AdminRecipe from './components/userArea/recipes';
 import Create from './components/userArea/recipes/create';
-import Recipe from './components/article';
+import Recipe from './components/recipe';
 
 class Routes extends Component {
   render() {
@@ -29,7 +29,7 @@ class Routes extends Component {
               <Route path='/user_area/recipes' component={Auth(AdminRecipe)} />
               <Route path='/user_area' component={Auth(UserArea)} />
               <Route path='/sign_in' component={UserAccess} />
-              <Route path='/article/:id' component={Recipe} />
+              <Route path='/recipe/:id' component={Recipe} />
               <Route path='/' component={Home} />
             </Switch>
           </Container>

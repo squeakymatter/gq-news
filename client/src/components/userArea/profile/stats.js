@@ -11,8 +11,6 @@ const Stats = (props) => {
     dispatch(getUserStats(user.auth._id));
   }, [dispatch, user.auth._id]);
 
-  //// DONT FORGET TO CLEAR THE STATE ON EXIT.
-
   return (
     <>
       {user.stats ? (
