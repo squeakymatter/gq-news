@@ -1,25 +1,22 @@
-const { User } = require('../../models/User');
-const { Category } = require('../../models/Category');
-const { Post } = require('../../models/Post');
+const { AuthenticationError } = require('apollo-server-express');
+const { User } = require('../../models/user');
+const { Category } = require('../../models/category');
+const { Post } = require('../../models/post');
 const authorize = require('../../utils/isAuth');
 const { sortArgsHelper } = require('../../utils/tools');
-const { AuthenticationError } = require('apollo-server-express');
 
 module.exports = {
   Query: {
     user: async (parent, args, context, info) => {
       try {
-        // create middleware to access request and try to find token.
         const req = authorize(context.req);
-
-        //get user by id
         const user = await User.findOne({ _id: args.id });
 
-        //wrong user
         if (req._id.toString() !== user._id.toString()) {
-          throw new AuthenticationError('Incorrect user');
+          throw new AuthenticationError(
+            'Something went wrong. Please try again'
+          );
         }
-
         return user;
       } catch (err) {
         throw err;
@@ -27,12 +24,11 @@ module.exports = {
     },
     isAuth: async (parent, args, context, info) => {
       try {
-        //make sure user is authenticated
         const req = authorize(context.req, true);
+
         if (!req._id) {
           throw new AuthenticationError('Bad token');
         }
-        //this info will be used on front end
         return { _id: req._id, email: req.email, token: req.token };
       } catch (err) {
         throw err;
@@ -67,6 +63,9 @@ module.exports = {
         if (queryBy) {
           queryByArgs[queryBy.key] = queryBy.value;
         }
+
+        // console.log(sortArgs)
+
         const posts = await Post.find(queryByArgs)
           .sort([[sortArgs.sortBy, sortArgs.order]])
           .skip(sortArgs.skip)

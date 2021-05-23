@@ -1,7 +1,7 @@
-//bring in user from User model from mongoose
-const { User } = require('../../models/User');
-const { Post } = require('../../models/Post');
-const { Category } = require('../../models/Category');
+const { User } = require('../../models/user');
+const { Post } = require('../../models/post');
+const { Category } = require('../../models/category');
+
 const {
   UserInputError,
   AuthenticationError,
@@ -9,35 +9,32 @@ const {
 } = require('apollo-server-express');
 const authorize = require('../../utils/isAuth');
 const { userOwnership } = require('../../utils/tools');
-const post = require('./post');
-const category = require('./category');
 
 module.exports = {
   Mutation: {
     authUser: async (parent, args, context, info) => {
       try {
-        //check that email address is correct
         const user = await User.findOne({
           email: args.fields.email,
         });
-        //throw authentication error if email not recognized
         if (!user) {
+          throw new AuthenticationError('Incorrect Email or Password');
+        }
+
+        const checkpass = await user.comparePassword(args.fields.password);
+        if (!checkpass) {
+          throw new AuthenticationError('Wrong password');
+        }
+
+        const getToken = await user.generateToken();
+        if (!getToken) {
           throw new AuthenticationError(
-            'Your email address is not recognized.'
+            'Something went wrong. Please try again'
           );
         }
-        //check if password is correct
-        const checkPassword = await user.comparePassword(args.fields.password);
-        //throw error if password is incorrect
-        if (!checkPassword) {
-          throw new AuthenticationError('Your email or password is incorrect.');
-        }
-        //login successful - generate token
-        const getToken = await user.generateToken();
 
-        //return user with new token
         return {
-          _id: user.id,
+          _id: user._id,
           email: user.email,
           token: getToken.token,
         };
@@ -47,7 +44,6 @@ module.exports = {
     },
     signUp: async (parent, args, context, info) => {
       try {
-        //create new user on db... not doing validation on the actual request--it comes from mongoose from the actual user.
         const user = new User({
           email: args.fields.email,
           password: args.fields.password,
@@ -56,19 +52,14 @@ module.exports = {
         const getToken = await user.generateToken();
         if (!getToken) {
           throw new AuthenticationError(
-            'Something went wrong. Please try again.'
+            'Something went wrong. Please try again'
           );
         }
+
         return { ...getToken._doc };
       } catch (err) {
-        // E11000 is the default MongoDB error for duplicate user
-        if (err.code === 11000) {
-          throw new AuthenticationError(
-            'This email address is already in use.'
-          );
-        }
         throw new ApolloError(
-          'Something went wrong. Please try again.',
+          'Something went wrong. Please try again',
           null,
           err
         );
@@ -76,20 +67,19 @@ module.exports = {
     },
     updateUserProfile: async (parent, args, context, info) => {
       try {
-        //check if user is authorized/has good token
         const req = authorize(context.req);
-        //if token is correct, make sure user owns what they're trying to modify
-        //get id that user is trying to modify through he args, and the id from the token and if user is incorrect, throw error.
+
         if (!userOwnership(req, args._id))
-          throw new AuthenticationError('Incorrect user');
-        // to do: validate fields
+          throw new AuthenticationError(
+            'Something went wrong. Please try again'
+          );
 
         const user = await User.findOneAndUpdate(
           { _id: args._id },
           {
             $set: {
-              firstName: args.firstName,
-              lastName: args.lastName,
+              name: args.name,
+              lastname: args.lastname,
             },
           },
           { new: true }
@@ -99,22 +89,20 @@ module.exports = {
         throw err;
       }
     },
-    updateUserEmailPasswordword: async (parent, args, context, info) => {
+    updateUserEmailPass: async (parent, args, context, info) => {
       try {
         const req = authorize(context.req);
 
         if (!userOwnership(req, args._id))
           throw new AuthenticationError(
-            'You are not authorized to perform this action.'
+            "'Something went wrong. Please try again'"
           );
 
         const user = await User.findOne({ _id: req._id });
         if (!user)
           throw new AuthenticationError(
-            'You are not authorized to perform this action.'
+            "'Something went wrong. Please try again'"
           );
-
-        // TODO: validate fields
 
         if (args.email) {
           user.email = args.email;
@@ -123,11 +111,13 @@ module.exports = {
           user.password = args.password;
         }
 
-        /// If correct user, generate token
         const getToken = await user.generateToken();
         if (!getToken) {
-          throw new AuthenticationError('Something went wrong, try again');
+          throw new AuthenticationError(
+            'Something went wrong. Please try again'
+          );
         }
+
         return { ...getToken._doc, token: getToken.token };
       } catch (err) {
         throw new ApolloError('Something went wrong, try again', err);
@@ -135,9 +125,8 @@ module.exports = {
     },
     createPost: async (parent, { fields }, context, info) => {
       try {
-        //verify user is authorized
         const req = authorize(context.req);
-        //todo: validation
+
         const post = new Post({
           title: fields.title,
           excerpt: fields.excerpt,
@@ -154,9 +143,8 @@ module.exports = {
     },
     createCategory: async (parent, args, context, info) => {
       try {
-        //verify user is authorized
         const req = authorize(context.req);
-        //todo: validation
+
         const category = new Category({
           author: req._id,
           name: args.name,
@@ -172,13 +160,9 @@ module.exports = {
         const req = authorize(context.req);
         const post = await Post.findOne({ _id: postId });
 
-        if (!post) {
-          throw new UserInputError('Post does not exist!');
-        }
-
         if (!userOwnership(req, post.author))
           throw new AuthenticationError(
-            'You are not authorized to perform this action'
+            'You are not authorized to perform this action.'
           );
 
         for (key in fields) {
@@ -196,19 +180,15 @@ module.exports = {
     deletePost: async (parent, { postId }, context, info) => {
       try {
         const req = authorize(context.req);
-        const post = await Post.findOne({ _id: postId });
-        if (!post) {
-          throw new UserInputError('This post does not exist.');
-        }
-        if (!userOwnership(req, post.author)) {
-          throw new AuthenticationError(
-            'You are not authorized to perform this action.'
+        const post = await Post.findByIdAndRemove(postId);
+        if (!post)
+          throw new UserInputError(
+            'Sorry.Not able to find your post or it was deleted already'
           );
-        }
-        const result = await post.remove();
-        return result;
-      } catch (error) {
-        throw error;
+
+        return post;
+      } catch (err) {
+        throw err;
       }
     },
     updateCategory: async (parent, { catId, name }, context, info) => {
@@ -223,7 +203,7 @@ module.exports = {
           },
           { new: true }
         );
-        /// throw..
+
         return { ...category._doc };
       } catch (err) {
         throw err;
@@ -233,7 +213,8 @@ module.exports = {
       try {
         const req = authorize(context.req);
         const category = await Category.findByIdAndRemove(catId);
-        if (!category) throw new UserInputError('Category does not exist.');
+        if (!category)
+          throw new UserInputError('Category already deleted or not found.');
 
         return category;
       } catch (err) {

@@ -19,7 +19,7 @@ const Header = (props) => {
     <>
       <Navbar className='bg-custom' variant='dark'>
         <LinkContainer to='/'>
-          <Navbar.Brand>Graph News</Navbar.Brand>
+          <Navbar.Brand>NomNom Recipes</Navbar.Brand>
         </LinkContainer>
       </Navbar>
       <Navbar className='bg-custom-small' variant='dark'>

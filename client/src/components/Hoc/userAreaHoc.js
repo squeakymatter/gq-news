@@ -2,7 +2,7 @@ import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
-const UserHome = (props) => {
+const UserAreaHOC = (props) => {
   return (
     <>
       <Navbar bg='light' variant='light'>
@@ -10,8 +10,8 @@ const UserHome = (props) => {
           <LinkContainer to='/user_area/profile'>
             <Nav.Link>Profile</Nav.Link>
           </LinkContainer>
-          <LinkContainer to='/user_area/articles'>
-            <Nav.Link>Articles</Nav.Link>
+          <LinkContainer to='/user_area/recipes'>
+            <Nav.Link>Recipes</Nav.Link>
           </LinkContainer>
           <LinkContainer to='/user_area/create'>
             <Nav.Link>Create</Nav.Link>
@@ -23,4 +23,4 @@ const UserHome = (props) => {
   );
 };
 
-export default UserHome;
+export default UserAreaHOC;

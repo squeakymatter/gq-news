@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import ToastHandler from '../../utils/toasts';
-//form validation
+
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -11,31 +11,33 @@ import { signupUser, loginUser } from '../../../store/actions';
 
 const UserAccess = (props) => {
   const dispatch = useDispatch();
-  //switch between Sign In and Register
+
   const [type, setType] = useState(true);
-  //add validation using formik hook
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email').required('Email is required'),
+      email: Yup.string()
+        .email('Invalid email')
+        .required('Sorry the email is required'),
       password: Yup.string()
-        .min(6, 'Password must be at minimum of 6 characters.')
-        .required('Password is required'),
+        .min(3, 'Must be more than 5 char')
+        .required('Sorry the password is required'),
     }),
     onSubmit: (values) => {
       onSubmitHandler(values);
     },
   });
-  // change between login and register CTAs depending on current location
+
   const switchTypeHandler = () => {
     setType(!type);
   };
 
   const onSubmitHandler = (values) => {
     if (type) {
+      // sign in
       dispatch(loginUser(values)).then(({ payload }) => {
         successHandler(payload);
       });
@@ -55,22 +57,25 @@ const UserAccess = (props) => {
       ToastHandler(errors, 'ERROR');
     }
     if (auth) {
-      //set token with value we get from server
       localStorage.setItem('X-AUTH', auth.token);
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + auth.token;
-      //trigger toast
       ToastHandler('Welcome', 'SUCCESS');
-      //redirect user to user's page.
       props.history.push('/user_area');
     }
   };
+
+  useEffect(() => {
+    return function cleanup() {
+      // dispatch to clear user error.
+    };
+  }, []);
 
   return (
     <>
       <Form onSubmit={formik.handleSubmit}>
         <Row className='mb-4'>
           <Col>
-            <h1>Sign In / Register</h1>
+            <h1>Sign in / Register</h1>
           </Col>
         </Row>
         <Form.Group>
@@ -88,6 +93,7 @@ const UserAccess = (props) => {
             <Alert variant='danger'>{formik.errors.email}</Alert>
           ) : null}
         </Form.Group>
+
         <Form.Group>
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -103,9 +109,10 @@ const UserAccess = (props) => {
             <Alert variant='danger'>{formik.errors.password}</Alert>
           ) : null}
         </Form.Group>
+
         {type ? (
           <Button variant='primary' type='submit'>
-            Log In
+            Sign in
           </Button>
         ) : (
           <Button variant='primary' type='submit'>
@@ -119,7 +126,7 @@ const UserAccess = (props) => {
         >
           {type
             ? 'Sign up for an account'
-            : 'Already registered? Click here to Login.'}
+            : 'Already registered? Click here to Sign in.'}
         </Button>
       </Form>
     </>

@@ -1,8 +1,9 @@
 const express = require('express');
+require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 const mongoose = require('mongoose');
 
-//graphql
+/// graphql
 const typeDefs = require('./graphql/schema');
 const { Query } = require('./graphql/resolvers/query');
 const { Mutation } = require('./graphql/resolvers/mutation');
@@ -21,17 +22,13 @@ const server = new ApolloServer({
     Category,
   },
   context: ({ req }) => {
-    // req.headers.authorization =
-    //   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDlmNDUwYTI3MTIxODBiYTNkM2UyYjciLCJlbWFpbCI6ImZvb2JhcnJpb0Bmb29iYXIuY29tIiwiaWF0IjoxNjIxMjI1NjcxLCJleHAiOjE2MjE4MzA0NzF9.SueBrx4XPdeTpp8NiIRnsAYUxf_ON3u4gscAQVEiKT8';
-
     return { req };
   },
 });
 
 server.applyMiddleware({ app });
 
-const PORT = process.env.PORT || 5001;
-
+const PORT = process.env.PORT || 5000;
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PW}@cluster0.lkxwy.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
