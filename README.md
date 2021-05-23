@@ -1,1 +1,1 @@
-# gq-news
+# Nom Nom Recipes
