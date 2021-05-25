@@ -157,7 +157,7 @@ const Create = () => {
         </Form.Group>
 
         <Button variant='primary' type='submit'>
-          Add post
+          Add Recipe
         </Button>
       </Form>
     </UserAreaHOC>
