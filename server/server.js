@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 const db = require('./connection');
+const path = require('path');
 
 /// graphql
 const typeDefs = require('./graphql/schema');
