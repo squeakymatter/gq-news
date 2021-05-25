@@ -1,5 +1,5 @@
-const Post = require('../../models/post');
-const Category = require('../../models/category');
+const Post = require('../../models/Post');
+const Category = require('../../models/Category');
 const { sortArgsHelper } = require('../../utils/tools');
 
 module.exports = {
