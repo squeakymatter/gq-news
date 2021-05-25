@@ -1,7 +1,7 @@
 const { AuthenticationError } = require('apollo-server-express');
-const { User } = require('../../models/User');
-const { Category } = require('../../models/Category');
-const { Post } = require('../../models/Post');
+const User = require('../../models/User');
+const Category = require('../../models/Category');
+const Post = require('../../models/Post');
 const authorize = require('../../utils/isAuth');
 const { sortArgsHelper } = require('../../utils/tools');
 
