@@ -11,7 +11,8 @@
     "client": "npm start --prefix client",
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "cd client && npm run build",
-    "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\""
+    "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "install": "cd server && npm i && cd ../client && npm i"
   },
   "author": "",
   "license": "ISC",
