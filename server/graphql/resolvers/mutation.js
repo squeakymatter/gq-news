@@ -1,6 +1,6 @@
-const { User } = require('../../models/user');
-const { Post } = require('../../models/post');
-const { Category } = require('../../models/category');
+const { User } = require('../../models/User');
+const { Post } = require('../../models/Post');
+const { Category } = require('../../models/Category');
 
 const {
   UserInputError,
