@@ -2,33 +2,22 @@
   "name": "gq-recipes",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/server.js",
   "engines": {
     "node": "14.x"
   },
   "scripts": {
     "start": "node server/server.js",
-    "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-postbuild": "cd client && npm run build"
+    "heroku-postbuild": "cd client && npm run build",
+    "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm start\""
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "apollo-server-express": "^2.16.1",
-    "bcrypt": "^5.0.0",
-    "concurrently": "^5.3.0",
-    "dotenv": "^8.6.0",
-    "express": "^4.17.1",
-    "express-graphql": "^0.12.0",
-    "graphql": "^15.5.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.0",
-    "validator": "^13.1.1"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "concurrently": "^6.2.0",
     "nodemon": "^2.0.4"
   }
 }
