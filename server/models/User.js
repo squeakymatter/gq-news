@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.pre('save', function (next) {
-  var user = this;
+  const user = this;
 
   if (user.isModified('password')) {
     bcrypt.genSalt(SALT_I, function (err, salt) {
@@ -51,7 +51,7 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.methods.comparePassword = function (candidatePassword) {
-  var user = this;
+  const user = this;
   return bcrypt
     .compare(candidatePassword, user.password)
     .then(function (result) {
@@ -60,9 +60,9 @@ userSchema.methods.comparePassword = function (candidatePassword) {
 };
 
 userSchema.methods.generateToken = async function () {
-  var user = this;
+  const user = this;
 
-  var token = jwt.sign(
+  const token = jwt.sign(
     { _id: user._id, email: user.email },
     process.env.SECRET,
     {

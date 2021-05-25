@@ -23,6 +23,8 @@ const server = new ApolloServer({
     Category,
   },
   context: ({ req }) => {
+    req.headers.authorization =
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGFjN2RkN2RlODlmYjc0MjM0ZGM5YTciLCJlbWFpbCI6ImZvbzJAYmFyLmNvbSIsImlhdCI6MTYyMTkxODU5NiwiZXhwIjoxNjIyNTIzMzk2fQ.tcpaW_4ZMDQjuUa64CSEYbIxGzHl7rhSERPj_2lsGSI';
     return { req };
   },
 });

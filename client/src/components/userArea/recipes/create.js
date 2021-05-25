@@ -38,7 +38,7 @@ const Create = () => {
     onSubmit: (values, { resetForm }) => {
       dispatch(createPost(values)).then(({ payload }) => {
         if (payload.createdPost.post) {
-          ToastHandler('Done!!', 'SUCCESS');
+          ToastHandler('Done!', 'SUCCESS');
           resetForm();
         }
         if (payload.createdPost.error) {
@@ -62,10 +62,10 @@ const Create = () => {
     <UserAreaHOC>
       <Form onSubmit={formik.handleSubmit} className='mt-3'>
         <Form.Group>
-          <Form.Label>Title</Form.Label>
+          <Form.Label>Recipe Title</Form.Label>
           <Form.Control
             type='text'
-            placeholder='Enter title'
+            placeholder='Enter the recipe title'
             id='title'
             name='title'
             onChange={formik.handleChange}
@@ -82,7 +82,7 @@ const Create = () => {
           <Form.Control
             as='textarea'
             rows='3'
-            placeholder='Enter the excerpt'
+            placeholder='Enter Excerpt'
             id='excerpt'
             name='excerpt'
             onChange={formik.handleChange}
@@ -95,11 +95,11 @@ const Create = () => {
         </Form.Group>
 
         <Form.Group>
-          <Form.Label>Content</Form.Label>
+          <Form.Label>Instructions</Form.Label>
           <Form.Control
             as='textarea'
             rows='3'
-            placeholder='Enter the content'
+            placeholder='Enter ingredients and instructions'
             id='content'
             name='content'
             onChange={formik.handleChange}

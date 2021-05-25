@@ -29,7 +29,7 @@ const Recipe = (props) => {
             Created by {myPost.author.name} {myPost.author.lastname}
           </small>
           <hr />
-          <div>{myPost.content}</div>
+          <p>{myPost.content}</p>
           <hr />
           <h3>Related posts</h3>
           <CardGroup>

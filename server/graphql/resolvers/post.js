@@ -21,10 +21,10 @@ module.exports = {
     category: async (parent, args, context, info) => {
       try {
         const categoryID = parent.category;
-        const contegory = await Category.findById({ _id: categoryID });
+        const category = await Category.findById({ _id: categoryID });
 
         return {
-          ...contegory._doc,
+          ...category._doc,
         };
       } catch (err) {
         throw err;
